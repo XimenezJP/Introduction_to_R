@@ -1,0 +1,87 @@
+---
+title: "Data Visualization"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Data Visualization
+In this tutorial we will demonstrate some of the many options the **ggplot2** package has for creating and customising graphs. We will use R’s airquality dataset in the datasets package.
+
+## Prerequisites
+```{r}
+library(ggplot2)
+library(RColorBrewer)
+library(tidyverse)
+library(datasets)
+library(grid)
+```
+
+## Boxplot
+```{r}
+airquality <- as.data.frame(airquality)
+
+airquality$Month <- factor(airquality$Month,
+                           labels = c("May", "Jun", "Jul", "Aug", "Sep"))
+
+fill <- "#4271AE"
+lines <- "#1F3552"
+
+boxplot <- ggplot(airquality, aes(x = Month, y = Ozone)) +
+            geom_boxplot(colour = lines, fill = fill,
+                         size = 1) +
+            scale_y_continuous(name = "Mean ozone in\nparts per billion",
+                                  breaks = seq(0, 175, 25),
+                                  limits=c(0, 175)) +
+            scale_x_discrete(name = "Month") +
+            ggtitle("Boxplot of mean ozone by month") +
+            theme_bw()
+boxplot
+```
+
+## Density Plot
+```{r}
+airquality <- as.data.frame(airquality)
+
+airquality_trimmed <- airquality %>% 
+                      filter(Month == 5 | 
+                             Month == 6 |
+                             Month == 7) %>%
+                      mutate(Month = recode_factor(Month, 
+                               `5` = "May", 
+                               `6` = "June",
+                               `7` = "July"))
+
+density <- ggplot(airquality_trimmed, aes(x = Ozone, fill = Month)) +
+            geom_density(position = "stack", alpha = 0.6) +
+            scale_x_continuous(name = "Mean ozone in\nparts per billion",
+                               breaks = seq(0, 200, 25),
+                               limits=c(0, 200)) +
+            scale_y_continuous(name = "Density") +
+            ggtitle("Density plot of mean ozone") +
+            theme_bw() +
+            scale_fill_brewer(palette="Accent")
+density
+```
+
+## Histogram
+```{r}
+airquality <- as.data.frame(airquality)
+
+barfill <- "#4271AE"
+barlines <- "#1F3552"
+
+histogram <- ggplot(airquality, aes(x = Ozone)) +
+              geom_histogram(aes(y = ..count..), binwidth = 5,
+                             colour = barlines, fill = barfill) +
+              scale_x_continuous(name = "Mean ozone in\nparts per billion",
+                                 breaks = seq(0, 175, 25),
+                                 limits=c(0, 175)) +
+              scale_y_continuous(name = "Count") +
+              ggtitle("Frequency histogram of mean ozone") +
+              theme_bw()
+histogram
+```
+
