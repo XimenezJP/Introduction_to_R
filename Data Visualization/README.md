@@ -56,7 +56,7 @@ boxplot
 
     ## Warning: Removed 37 rows containing non-finite values (stat_boxplot).
 
-![](Data-Visualization_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](https://raw.githubusercontent.com/XimenezJP/Introduction_to_R/master/Data%20Visualization/boxplot.png)<!-- -->
 
 ## Density Plot
 
