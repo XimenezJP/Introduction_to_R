@@ -66,7 +66,7 @@ boxplot
 
     ## Warning: Removed 37 rows containing non-finite values (stat_boxplot).
 
-![](Data-Visualization_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![Boxplot](Data-Visualization_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 ## Density Plot
 
@@ -96,4 +96,4 @@ density <- ggplot(airquality_trimmed, aes(x = Ozone, fill = Month)) +
 density
 ```
 
-![](Data-Visualization_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![Density](http://t-redactyl.io/figure/density_17-1.png)<!-- -->
