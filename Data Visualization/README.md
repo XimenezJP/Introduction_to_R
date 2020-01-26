@@ -56,7 +56,7 @@ boxplot
 
     ## Warning: Removed 37 rows containing non-finite values (stat_boxplot).
 
-![](https://raw.githubusercontent.com/XimenezJP/Introduction_to_R/master/Data%20Visualization/boxplot.png)<!-- -->
+![Boxplot](https://raw.githubusercontent.com/XimenezJP/Introduction_to_R/master/Data%20Visualization/boxplot.png)<!-- -->
 
 ## Density Plot
 
@@ -84,7 +84,7 @@ density <- ggplot(airquality_trimmed, aes(x = Ozone, fill = Month)) +
 density
 ```
 
-![](Data-Visualization_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![Density Plot](https://raw.githubusercontent.com/XimenezJP/Introduction_to_R/master/Data%20Visualization/density.png)<!-- -->
 
 ## Histogram
 
@@ -110,4 +110,4 @@ histogram
 
     ## Warning: Removed 2 rows containing missing values (geom_bar).
 
-![](Data-Visualization_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![Histogram](https://raw.githubusercontent.com/XimenezJP/Introduction_to_R/master/Data%20Visualization/histogram.png)<!-- -->
