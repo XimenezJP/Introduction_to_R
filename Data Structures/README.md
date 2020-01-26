@@ -12,8 +12,7 @@ and fields.
 RStudio is an integrated development environment (IDE) for R. It
 includes a console, syntax-highlighting editor that supports direct code
 execution, as well as tools for plotting, history, debugging and
-workspace
-    management.
+workspace management. This tutorial was adapted from **Sydney Informatics Hub's** tutorial at https://github.com/Sydney-Informatics-Hub.
 
 ## Working directory
 
