@@ -5,7 +5,7 @@ Data Visualization
 
 In this tutorial we will demonstrate some of the many options the
 **ggplot2** package has for creating and customising graphs. We will use
-R’s airquality dataset in the datasets package.
+R’s airquality dataset in the datasets package. This tutorial was adapted from **The Hitchhiker's Guide to Ggplot2**.
 
 ## Prerequisites
 
