@@ -1,0 +1,88 @@
+---
+title: "Statistical Analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Logistic Regression in R with Healthcare data
+We will run a logistic regression to evaluate the effect of calcium and vitD on the osteoporosis. In this tutorial we will demonstrate some of the many options the **RNHANES** package. This tutorial was adapted from **Anisa Dhana's** tutorial at https://datascienceplus.com/.
+
+## Prerequisites
+```{r}
+library(tidyverse)
+library(RNHANES)
+library(ggplot2)
+library(pROC)
+```
+
+## Prepare the dataset
+
+```{r}
+d07 = nhanes_load_data("DEMO_E", "2007-2008") %>%
+  select(SEQN, cycle, RIAGENDR, RIDAGEYR) %>%
+  transmute(SEQN=SEQN, wave=cycle, RIAGENDR, RIDAGEYR) %>% 
+  left_join(nhanes_load_data("VID_E", "2007-2008"), by="SEQN") %>%
+  select(SEQN, wave, RIAGENDR, RIDAGEYR, LBXVIDMS) %>% 
+  transmute(SEQN, wave, RIAGENDR, RIDAGEYR, vitD=LBXVIDMS) %>% 
+  left_join(nhanes_load_data("BIOPRO_E", "2007-2008"), by="SEQN") %>%
+  select(SEQN, wave, RIAGENDR, RIDAGEYR, vitD, LBXSCA) %>% 
+  transmute(SEQN, wave, RIAGENDR, RIDAGEYR, vitD, Calcium = LBXSCA) %>% 
+  left_join(nhanes_load_data("OSQ_E", "2007-2008"), by="SEQN") %>%
+  select(SEQN, wave, RIAGENDR, RIDAGEYR, vitD, Calcium, OSQ060) %>% 
+  transmute(SEQN, wave, RIAGENDR, RIDAGEYR, vitD, Calcium, Osteop = OSQ060)
+
+d09 = nhanes_load_data("DEMO_F", "2009-2010") %>%
+  select(SEQN, cycle, RIAGENDR, RIDAGEYR) %>%
+  transmute(SEQN=SEQN, wave=cycle, RIAGENDR, RIDAGEYR) %>% 
+  left_join(nhanes_load_data("VID_F", "2009-2010"), by="SEQN") %>%
+  select(SEQN, wave, RIAGENDR, RIDAGEYR, LBXVIDMS) %>% 
+  transmute(SEQN, wave, RIAGENDR, RIDAGEYR, vitD=LBXVIDMS) %>% 
+  left_join(nhanes_load_data("BIOPRO_F", "2009-2010"), by="SEQN") %>%
+  select(SEQN, wave, RIAGENDR, RIDAGEYR, vitD,  LBXSCA) %>% 
+  transmute(SEQN, wave, RIAGENDR, RIDAGEYR, vitD, Calcium = LBXSCA) %>% 
+  left_join(nhanes_load_data("OSQ_F", "2009-2010"), by="SEQN") %>%
+  select(SEQN, wave, RIAGENDR, RIDAGEYR, vitD, Calcium, OSQ060) %>% 
+  transmute(SEQN, wave, RIAGENDR, RIDAGEYR, vitD, Calcium, Osteop = OSQ060)
+
+dat = bind_rows(d07, d09) %>% as.data.frame()
+```
+
+### Create categories of Vitamin D
+```{r}
+dat1 = dat %>% 
+  mutate(
+    vitD_group = case_when(
+      vitD < 30 ~ "Deficiency",
+      vitD >= 30 & vitD < 50 ~ "Inadequacy",
+      vitD >= 50 & vitD <= 125 ~ "Sufficiency"))
+```
+
+### Exclude missings
+```{r}
+dat2 = dat1 %>% 
+  filter(!is.na(vitD_group), !is.na(Calcium), !is.na(Osteop), Osteop!=9) %>% 
+  mutate(Gender = recode_factor(RIAGENDR, 
+                           `1` = "Men", 
+                           `2` = "Women"),
+         Osteop = recode_factor(Osteop, 
+                           `1` = 1, 
+                           `2` = 0))
+
+head(dat2)
+```
+
+## Logit regression model
+I will use the **glm()** function to run the logistic regression and then summary() command to get the results.
+
+```{r}
+fit <- glm(Osteop ~ vitD_group + Calcium + Gender + RIDAGEYR, 
+           data = dat2, 
+           family = "binomial")
+summary(fit)
+
+round(exp(coef(fit)), 2)
+```
+
